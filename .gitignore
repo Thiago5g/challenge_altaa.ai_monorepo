@@ -1,0 +1,24 @@
+# Node
+node_modules/
+npm-debug.log*
+
+# Env files
+.env
+.env.*
+!.env.example
+frontend/.env.local
+frontend/.env.*
+!frontend/.env.local.example
+
+# Build outputs
+dist/
+.next/
+coverage/
+
+# Prisma
+backend/generated/
+backend/prisma/migrations/
+
+# OS
+Thumbs.db
+.DS_Store
