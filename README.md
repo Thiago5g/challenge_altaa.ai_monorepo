@@ -1,9 +1,6 @@
 # ALTAA - Sistema de Gestão de Empresas
 
-[![Monorepo CI](https://github.com/Thiago5g/altaa.ai_frontend/actions/workflows/ci.yml/badge.svg)](https://github.com/Thiago5g/altaa.ai_frontend/actions/workflows/ci.yml)
-[![Backend CI](https://github.com/Thiago5g/altaa.ai_frontend/actions/workflows/backend.yml/badge.svg)](https://github.com/Thiago5g/altaa.ai_frontend/actions/workflows/backend.yml)
-[![Frontend CI](https://github.com/Thiago5g/altaa.ai_frontend/actions/workflows/frontend.yml/badge.svg)](https://github.com/Thiago5g/altaa.ai_frontend/actions/workflows/frontend.yml)
-[![Security](https://github.com/Thiago5g/altaa.ai_frontend/actions/workflows/security.yml/badge.svg)](https://github.com/Thiago5g/altaa.ai_frontend/actions/workflows/security.yml)
+[![CI](https://github.com/Thiago5g/challenge_altaa.ai_monorepo/actions/workflows/ci.yml/badge.svg)](https://github.com/Thiago5g/challenge_altaa.ai_monorepo/actions/workflows/ci.yml)
 
 Sistema completo com backend NestJS e frontend Next.js para gestão de empresas, membros e convites.
 
