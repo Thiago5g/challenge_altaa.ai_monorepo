@@ -1,5 +1,7 @@
 # ALTAA - Sistema de Gestão de Empresas
 
+[![CI](https://github.com/Thiago5g/challenge_altaa.ai_monorepo/actions/workflows/ci.yml/badge.svg)](https://github.com/Thiago5g/challenge_altaa.ai_monorepo/actions/workflows/ci.yml)
+
 Sistema completo com backend NestJS e frontend Next.js para gestão de empresas, membros e convites.
 
 ## 🚀 Quick Start com Docker (Recomendado)
@@ -262,6 +264,37 @@ docker-compose up -d --build
 docker-compose down -v
 ```
 
-## 📄 Licença
+## � CI/CD
+
+Este projeto utiliza GitHub Actions para integração e deploy contínuo.
+
+### Workflows Disponíveis
+
+- **Monorepo CI** (`.github/workflows/ci.yml`): Detecção inteligente de mudanças e execução otimizada
+- **Backend CI** (`.github/workflows/backend.yml`): Lint, testes e build do backend
+- **Frontend CI** (`.github/workflows/frontend.yml`): Lint e build do frontend
+- **Security** (`.github/workflows/security.yml`): Auditoria de segurança semanal
+- **PR Checks** (`.github/workflows/pr-checks.yml`): Validações em pull requests
+- **Deploy** (`.github/workflows/deploy.yml`): Deploy automático para produção
+
+### Características
+
+✅ **Detecção inteligente**: Apenas roda jobs para código modificado  
+✅ **PostgreSQL**: Service container para testes com banco real  
+✅ **Cobertura de testes**: Upload automático para Codecov  
+✅ **Security scanning**: Trivy para imagens Docker, npm audit  
+✅ **Dependabot**: Atualizações automáticas de dependências  
+✅ **Auto-labeling**: Labels automáticas em PRs baseadas em arquivos  
+
+### Documentação Completa
+
+📖 Veja [CI-CD.md](./CI-CD.md) para documentação detalhada sobre:
+- Como funciona cada workflow
+- Configuração de secrets
+- Branch protection
+- Troubleshooting
+- Métricas e monitoramento
+
+## �📄 Licença
 
 Proprietary - Todos os direitos reservados

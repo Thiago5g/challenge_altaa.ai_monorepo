@@ -1,0 +1,33 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  validate:
+    name: Validação
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      
+      - name: Validar Estrutura
+        run: |
+          echo "✅ Validando estrutura do projeto..."
+          
+          if [ -d "backend" ] && [ -d "frontend" ]; then
+            echo "✅ Backend e Frontend encontrados"
+            echo "📦 Estrutura validada com sucesso!"
+          else
+            echo "❌ Erro: Backend ou Frontend não encontrado"
+            exit 1
+          fi
+      
+      - name: Sucesso
+        run: echo "🎉 CI passou com sucesso!"
