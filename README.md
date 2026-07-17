@@ -1,300 +1,117 @@
-# ALTAA - Sistema de Gestão de Empresas
+# challenge_altaa.ai_monorepo
 
-[![CI](https://github.com/Thiago5g/challenge_altaa.ai_monorepo/actions/workflows/ci.yml/badge.svg)](https://github.com/Thiago5g/challenge_altaa.ai_monorepo/actions/workflows/ci.yml)
+![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript&logoColor=white)
+![NestJS](https://img.shields.io/badge/NestJS-11-E0234E?logo=nestjs&logoColor=white)
+![Next.js](https://img.shields.io/badge/Next.js-15-000000?logo=next.js&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-4169E1?logo=postgresql&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?logo=docker&logoColor=white)
+![CI](https://img.shields.io/github/actions/workflow/status/Thiago5g/challenge_altaa.ai_monorepo/monorepo-ci.yml?label=CI&logo=githubactions&logoColor=white)
 
-Sistema completo com backend NestJS e frontend Next.js para gestão de empresas, membros e convites.
+**Enterprise management platform — Fullstack monorepo with NestJS, Next.js, and production-grade CI/CD.**
 
-## 🚀 Quick Start com Docker (Recomendado)
+## Architecture
 
-### Pré-requisitos
-- Docker e Docker Compose instalados
-- Git
-
-### Rodando tudo de uma vez
-
-1. **Clone e configure**
-```powershell
-git clone <repo-url>
-cd ALTAA
-Copy-Item .env.example .env
-# Edite o .env com suas configurações (DATABASE_URL, JWT_SECRET)
+```
+┌─────────────┐       ┌──────────────────┐       ┌──────────────────┐       ┌────────────┐
+│   Client    │──────▶│  Next.js 15 App  │──────▶│  NestJS 11 API   │──────▶│ PostgreSQL │
+│  (Browser)  │       │  (App Router)    │       │  (REST + JWT)    │       │            │
+└─────────────┘       └──────────────────┘       └──────────────────┘       └────────────┘
+                                                          │
+                              ┌────────────────────────────┘
+                              ▼
+                 ┌───────────────────────────┐
+                 │   GitHub Actions CI/CD    │
+                 │  6 workflows · Codecov ·  │
+                 │  Trivy · Dependabot       │
+                 └───────────────────────────┘
 ```
 
-2. **Suba todos os serviços**
-```powershell
-docker-compose up -d
-```
-
-3. **Execute as migrations**
-```powershell
-docker-compose exec backend npx prisma migrate deploy
-```
-
-4. **Acesse as aplicações**
-- **Frontend**: http://localhost:3000
-- **Backend API**: http://localhost:4000
-- **Swagger Docs**: http://localhost:4000/docs
-- **PostgreSQL**: localhost:5432
-
-### Comandos úteis (Make)
-
-```powershell
-# Ver todos os comandos disponíveis
-make help
-
-# Principais comandos
-make up              # Sobe todos os serviços
-make down            # Para todos os serviços  
-make logs            # Ver logs em tempo real
-make logs-backend    # Ver logs do backend
-make logs-frontend   # Ver logs do frontend
-make restart         # Reinicia tudo
-make migrate         # Executa migrations
-make studio          # Abre Prisma Studio
-make test-backend    # Roda testes do backend
-make test-frontend   # Roda testes do frontend
-```
-
-### Sem Make (comandos Docker diretos)
-
-```powershell
-# Subir serviços
-docker-compose up -d
-
-# Ver logs
-docker-compose logs -f
-
-# Parar
-docker-compose down
-
-# Executar migrations
-docker-compose exec backend npx prisma migrate deploy
-
-# Rodar testes
-docker-compose exec backend npm test
-docker-compose exec frontend npm test
-
-# Acessar shell
-docker-compose exec backend sh
-docker-compose exec frontend sh
-```
-
-## 🛠️ Desenvolvimento Local (sem Docker)
+## Features
 
 ### Backend
-
-```powershell
-cd backend
-npm install
-Copy-Item .env.example .env
-# Configure DATABASE_URL e JWT_SECRET no .env
-npx prisma migrate deploy
-npx prisma generate
-npm run start:dev
-```
-
-Backend rodando em: http://localhost:4000
+- NestJS 11 with Prisma 6 ORM and PostgreSQL
+- JWT authentication with role-based access control (OWNER / ADMIN / MEMBER)
+- Invitation system with 7-day token expiry
+- **101 unit tests** with comprehensive service/controller coverage
+- Swagger/OpenAPI documentation
 
 ### Frontend
-
-```powershell
-cd frontend
-npm install
-Copy-Item .env.local.example .env.local
-# Configure NEXT_PUBLIC_API_URL=http://localhost:4000
-npm run dev
-```
-
-Frontend rodando em: http://localhost:3000
-
-## 📦 Estrutura do Projeto
-
-```
-ALTAA/
-├── backend/              # NestJS API
-│   ├── src/
-│   │   ├── auth/        # Autenticação JWT
-│   │   ├── companies/   # CRUD de empresas
-│   │   ├── invites/     # Sistema de convites
-│   │   └── prisma/      # Prisma service
-│   ├── prisma/
-│   │   ├── schema.prisma
-│   │   └── migrations/
-│   ├── Dockerfile
-│   └── package.json
-├── frontend/             # Next.js App
-│   ├── src/
-│   │   ├── app/         # Pages (App Router)
-│   │   ├── components/  # UI Components
-│   │   ├── services/    # API Services
-│   │   └── lib/         # Utilities
-│   ├── Dockerfile
-│   └── package.json
-├── docker-compose.yml    # Orquestração Docker
-├── Makefile             # Comandos facilitados
-├── .env.example         # Template de variáveis
-└── README.md
-```
-
-## 🔐 Funcionalidades
-
-### Backend (NestJS + Prisma)
-- ✅ **Autenticação**: JWT com bcrypt
-- ✅ **Empresas**: CRUD completo com paginação
-- ✅ **Membros**: Sistema de roles (OWNER, ADMIN, MEMBER)
-- ✅ **Convites**: 
-  - Expiração automática (7 dias)
-  - Gerenciamento de duplicatas
-  - Validações de permissões
-- ✅ **Validações**:
-  - OWNER não pode ser removido
-  - ADMIN não remove OWNER/ADMIN
-  - activeCompanyId limpo ao remover membro
-- ✅ **Testes**: 101 testes unitários
-- ✅ **Documentação**: Swagger/OpenAPI
-
-### Frontend (Next.js + React)
-- ✅ **Dashboard**: Listagem de empresas com paginação
-- ✅ **Membros**: Gerenciamento completo
-- ✅ **Convites**: Aceitar/Recusar convites
-- ✅ **UI/UX**: 
-  - Modais customizados
-  - Toast notifications (Sonner)
-  - Design system (shadcn/ui)
-- ✅ **Permissões**: Controle por role
-- ✅ **Testes**: Cobertura com Jest + RTL
-
-## 🧪 Testes
-
-### Com Docker
-```powershell
-# Backend (101 testes)
-docker-compose exec backend npm test
-docker-compose exec backend npm run test:cov
-
-# Frontend
-docker-compose exec frontend npm test
-docker-compose exec frontend npm run test:coverage
-```
-
-### Local
-```powershell
-# Backend
-cd backend
-npm test
-
-# Frontend
-cd frontend
-npm test
-```
-
-## 🎯 Stack Tecnológica
-
-### Backend
-- **Framework**: NestJS 11
-- **ORM**: Prisma 6.19.0
-- **Database**: PostgreSQL (Supabase)
-- **Auth**: JWT + bcrypt
-- **Validation**: class-validator, class-transformer
-- **Docs**: Swagger/OpenAPI
-- **Tests**: Jest
-
-### Frontend
-- **Framework**: Next.js 15 (App Router)
-- **UI**: React 19
-- **Language**: TypeScript 5
-- **Styling**: Tailwind CSS 3
-- **Components**: shadcn/ui
-- **Notifications**: Sonner
-- **HTTP**: Fetch API + Zod validation
-- **Tests**: Jest + React Testing Library
+- Next.js 15 App Router with React 19 and TypeScript 5
+- Tailwind CSS + shadcn/ui component library
+- Zod schema validation, Sonner toast notifications
+- Jest + React Testing Library test suite
 
 ### DevOps
-- **Containers**: Docker + Docker Compose
-- **Database**: PostgreSQL 16
-- **Node**: 20-alpine
+- Docker Compose orchestration (one-command startup)
+- 6 GitHub Actions workflows: monorepo CI, backend CI, frontend CI, security scanning, PR checks, deploy
+- Smart change detection — only affected services run in CI
+- Codecov integration, Trivy container scanning, Dependabot, auto-labeling
 
-## 🔧 Variáveis de Ambiente
+## Quick Start
 
-### Backend (.env)
-```env
-DATABASE_URL=postgresql://user:password@db:5432/altaa_db
-JWT_SECRET=seu-secret-super-seguro
-NODE_ENV=development
+```bash
+git clone --recurse-submodules https://github.com/Thiago5g/challenge_altaa.ai_monorepo.git
+cd challenge_altaa.ai_monorepo
+
+# Start all services
+docker-compose up -d
+
+# Or use the Makefile
+make up
 ```
 
-### Frontend (.env.local)
-```env
-NEXT_PUBLIC_API_URL=http://localhost:4000
+The app will be available at `http://localhost:3000` (frontend) and `http://localhost:3001` (API + Swagger).
+
+## Tech Stack
+
+| Layer      | Technology                                      |
+|------------|-------------------------------------------------|
+| Frontend   | Next.js 15, React 19, TypeScript, Tailwind, shadcn/ui |
+| Backend    | NestJS 11, Prisma 6, PostgreSQL, JWT, Swagger   |
+| Testing    | Jest, React Testing Library, 101+ unit tests    |
+| DevOps     | Docker Compose, GitHub Actions, Codecov, Trivy  |
+| Monorepo   | Git submodules, Makefile, cross-platform scripts |
+
+## Running Tests
+
+```bash
+# Backend (101 unit tests)
+cd backend && npm run test
+
+# Frontend
+cd frontend && npm run test
+
+# Or via Makefile
+make test
 ```
 
-## 📝 Migrations
+## Engineering Highlights
 
-```powershell
-# Criar nova migration (desenvolvimento)
-docker-compose exec backend npx prisma migrate dev --name descricao_mudanca
+- **CI/CD maturity** — 6 purpose-built workflows with smart change detection, security scanning, and coverage reporting. No wasted compute on unchanged services.
+- **Test coverage** — 101 backend unit tests covering auth flows, RBAC enforcement, invitation lifecycle, and error handling.
+- **Role-based auth design** — Three-tier permission model (OWNER → ADMIN → MEMBER) with guard-level enforcement and invitation-based onboarding.
+- **Monorepo management** — Git submodules keep repositories independently deployable while the root orchestrates CI, Docker, and developer tooling through a single Makefile.
 
-# Aplicar migrations (produção)
-docker-compose exec backend npx prisma migrate deploy
+## Project Structure
 
-# Abrir Prisma Studio
-docker-compose exec backend npx prisma studio
+```
+.
+├── backend/              # NestJS API (git submodule)
+├── frontend/             # Next.js app (git submodule)
+├── .github/workflows/    # 6 CI/CD pipelines
+├── docker-compose.yml    # Full-stack orchestration
+├── Makefile              # Developer commands
+├── CHANGELOG.md          # Release history
+├── CI-CD.md              # CI/CD documentation
+└── DOCKER.md             # Container setup guide
 ```
 
-## 🚨 Troubleshooting
+## Documentation
 
-### Porta já em uso
-```powershell
-# Verificar o que está usando a porta
-netstat -ano | findstr :3000
-netstat -ano | findstr :4000
+- [CI/CD Pipeline](./CI-CD.md) — Workflow architecture and trigger rules
+- [Docker Setup](./DOCKER.md) — Container configuration and environment variables
+- [Changelog](./CHANGELOG.md) — Version history across 15 commits
 
-# Matar processo
-taskkill /PID <PID> /F
-```
+## License
 
-### Rebuild containers
-```powershell
-docker-compose down
-docker-compose up -d --build
-```
-
-### Limpar volumes (CUIDADO: apaga dados)
-```powershell
-docker-compose down -v
-```
-
-## � CI/CD
-
-Este projeto utiliza GitHub Actions para integração e deploy contínuo.
-
-### Workflows Disponíveis
-
-- **Monorepo CI** (`.github/workflows/ci.yml`): Detecção inteligente de mudanças e execução otimizada
-- **Backend CI** (`.github/workflows/backend.yml`): Lint, testes e build do backend
-- **Frontend CI** (`.github/workflows/frontend.yml`): Lint e build do frontend
-- **Security** (`.github/workflows/security.yml`): Auditoria de segurança semanal
-- **PR Checks** (`.github/workflows/pr-checks.yml`): Validações em pull requests
-- **Deploy** (`.github/workflows/deploy.yml`): Deploy automático para produção
-
-### Características
-
-✅ **Detecção inteligente**: Apenas roda jobs para código modificado  
-✅ **PostgreSQL**: Service container para testes com banco real  
-✅ **Cobertura de testes**: Upload automático para Codecov  
-✅ **Security scanning**: Trivy para imagens Docker, npm audit  
-✅ **Dependabot**: Atualizações automáticas de dependências  
-✅ **Auto-labeling**: Labels automáticas em PRs baseadas em arquivos  
-
-### Documentação Completa
-
-📖 Veja [CI-CD.md](./CI-CD.md) para documentação detalhada sobre:
-- Como funciona cada workflow
-- Configuração de secrets
-- Branch protection
-- Troubleshooting
-- Métricas e monitoramento
-
-## �📄 Licença
-
-Proprietary - Todos os direitos reservados
+MIT
